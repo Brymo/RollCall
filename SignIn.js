@@ -2,15 +2,11 @@ const puppeteer = require("puppeteer");
 
 const url = "https://forms.office.com/Pages/ResponsePage.aspx?id=EBQfvtWH7EWsLigsaPOCv7WyajnICulItLoeI3kI78dUMUFNWjU1S1oyWkZVVjlQSUNMQjMxMzVWNCQlQCN0PWcu&qrcode=true&fbclid=IwAR0j_X7Af1cuuYc7jNAxHYvr5IdZy56XT0lkT-m79UgYKzQllpW7X6R05Mg";
 
-const subjects = ["Beyond the Church 1",
- "Christian Doctrine 1",
-"School of the Holy Spirit 1",
-"SYD Masterclass",
-"Relationships and Emotional Intelligence",
-"The Early Church",
-"Old Testament 1",
-"New Testament 1",
-"Teamwork & Ministry Gifts",
+const subjects = [
+    "Contemporary Leadership & Pastoring",
+    "Encountering the Holy Spirit",
+    "World Religions",
+    "New Testament Study: Galatians & Romans",
 ]
 
 let iteration = subjects.length - 1;
@@ -21,12 +17,12 @@ async function run(){
     const page = await browser.newPage();
     await page.goto(url);
     while (iteration >= 0){
-        const firstNameTextBox = await page.$(".office-form-question-textbox");
+        const firstNameTextBox = await page.waitForSelector(".office-form-question-textbox", {visible: true});
         const surnameTextBox = await page.$("#form-container > div > div > div.office-form-content.office-form-page-padding > div > div.office-form.office-form-theme-shadow > div.office-form-body > div.office-form-question-body > div:nth-child(3) > div > div.office-form-question-element > div > div > input");
         await firstNameTextBox.type("Bryan");
         await surnameTextBox.type("Moh");
 
-        const level = await page.$x("//span[contains(., 'Certificate IV')]");
+        const level = await page.$x("//span[contains(., 'Diploma')]");
         await level[0].click();
         const subject = await page.$x(`//span[contains(., '${subjects[iteration]}')]`);
         await subject[0].click();
@@ -59,7 +55,7 @@ async function run(){
     }
 
     console.log("All done!  Don't tell Nathan Ross shhhh")
-    browser.close();
+    browser.close(); 
 }
 
 run();
